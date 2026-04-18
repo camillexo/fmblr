@@ -255,6 +255,39 @@
     transform: scale(1.05);
   }
 
+  /* ===== MOBILE FIX ===== */
+  @media (max-width: 480px) {
+    .text-overlay {
+      top: 35%;
+      width: 64%;
+    }
+    .heading {
+      font-size: clamp(22px, 5.5vw, 30px);
+      margin-bottom: 2%;
+    }
+    .system-heading {
+      font-size: clamp(13px, 3.2vw, 18px);
+      margin-bottom: 3%;
+    }
+    .stat-block {
+      font-size: clamp(12px, 3vw, 17px);
+      line-height: 1.15;
+    }
+    .btn-lockin,
+    .btn-logout {
+      bottom: 4.5%;
+      height: 9%;
+    }
+    .btn-lockin { width: 40%; left: 9%; }
+    .btn-logout { width: 40%; right: 5%; }
+  }
+
+  @media (max-width: 360px) {
+    .text-overlay { top: 33%; width: 68%; }
+    .heading { font-size: 20px; line-height: 0.85; }
+    .system-heading { font-size: 12px; }
+    .stat-block { font-size: 11px; }
+  }
 
 </style>
 </head>
