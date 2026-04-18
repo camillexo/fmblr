@@ -128,7 +128,7 @@
   /* ===== WHITE TEXT ===== */
   .text-overlay {
     position: absolute;
-    top: 28%;
+    top: 39%;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -257,24 +257,11 @@
 
   /* ===== MOBILE — text only, buttons untouched ===== */
   @media (max-width: 480px) {
-    .text-overlay {
-      top: 36%;
-      width: 62%;
-    }
-    .heading {
-      font-size: clamp(20px, 5vw, 28px);
-      margin-bottom: 2%;
-    }
-    .system-heading {
-      font-size: clamp(12px, 3vw, 17px);
-      margin-bottom: 2%;
-    }
-    .stat-block {
-      font-size: clamp(11px, 2.8vw, 16px);
-      line-height: 1.1;
-    }
+    .text-overlay { top: 36%; width: 62%; }
+    .heading { font-size: clamp(20px, 5vw, 28px); margin-bottom: 2%; }
+    .system-heading { font-size: clamp(12px, 3vw, 17px); margin-bottom: 2%; }
+    .stat-block { font-size: clamp(11px, 2.8vw, 16px); line-height: 1.1; }
   }
-
   @media (max-width: 360px) {
     .text-overlay { top: 34%; width: 66%; }
     .heading { font-size: 18px; }
@@ -303,11 +290,9 @@
     <div class="stat-block">
      ATTEMPTS TO FOLLOW-UP WITH CAMILLE: not found<br>
      <br>
-     DATE TIMER: <span class="red" id="countdown">11:59:30</span><br>
+     DATE TIMER: <span class="red" id="countdown">23:49:31</span><br>
      LOCATION: unconfirmed<br>
      TIME: unconfirmed<br>
-     <br>
-     It sucks that I even had to send this to you...
     </div>
   </div>
 
@@ -329,13 +314,31 @@
     window.open('https://mindfultherapygroup.com/blog-post/the-male-loneliness-epidemic/', '_blank');
   }
 
-  // Countdown
-  let h = 11, m = 59, s = 59;
-  setInterval(() => {
-    s--; if (s < 0) { s = 59; m--; } if (m < 0) { m = 59; h--; } if (h < 0) { h = m = s = 0; }
+  // Persistent countdown — starts on first visit, survives refreshes
+  const TIMER_HOURS = 24; // change this to set how long the countdown runs
+  const STORAGE_KEY = 'fumble_start';
+
+  // First visit? Save the timestamp. Return visit? Read it back.
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    localStorage.setItem(STORAGE_KEY, Date.now().toString());
+  }
+  const startTime = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+  const deadline  = startTime + TIMER_HOURS * 60 * 60 * 1000;
+
+  function tick() {
+    const remaining = Math.max(0, deadline - Date.now());
+    const totalSec  = Math.floor(remaining / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
     document.getElementById('countdown').textContent =
       `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-  }, 1000);
+    if (remaining <= 0) {
+      document.getElementById('countdown').textContent = '00:00:00';
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
 </script>
 
 
